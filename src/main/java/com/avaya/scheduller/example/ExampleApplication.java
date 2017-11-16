@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 @SpringBootApplication
 public class ExampleApplication {
 
-	private final static String BASE_URL = "https://prototype.avaya.com :443/";
+	private final static String BASE_URL = "https://prototype.avaya.com:443/";
 	/**
 	 * this service prefix should correspond meeting type prefix from Equinox Management
 	 */
