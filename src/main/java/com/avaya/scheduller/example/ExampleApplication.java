@@ -34,7 +34,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 @SpringBootApplication
 public class ExampleApplication {
 
-	private final static String BASE_URL = "https://dev-cores205.uplab.com:443/";
+	private final static String BASE_URL = "https://prototype.avaya.com:443/";
 	/**
 	 * this service prefix should correspond meeting type prefix from Equinox Management
 	 */
@@ -47,8 +47,8 @@ public class ExampleApplication {
 		JsonNode resources = getResources(BASE_URL, null);
 
 		//these login and password should be replaced with login and password of common user
-		String login = "3000001";
-		String password = "3000001";
+		String login = "serviceAPI";
+		String password = "1234";
 		// now we need to get link for authentication service
 		JsonNode jsonNode = resources.get("resources").get("authentication").get("POST").get("login").get("href");
 		//we need to get authentication token from server
@@ -65,6 +65,7 @@ public class ExampleApplication {
 				.get("getConferences").get("href");
 
 		String number = MEETING_SERVICE_ID_PREFIX + "024";
+		// Note, that ownerEmail should be email of user registered in Management App (iView).
 		scheduleConference(token, "Description of conference", "Brand new confence2", MEETING_SERVICE_ID_PREFIX, number, "1234",
 						   "6797",createConferenceUrl.asText(),"3000001@uplab.com");
 		findConference(token,searchConferenceUrl.asText(), number);
