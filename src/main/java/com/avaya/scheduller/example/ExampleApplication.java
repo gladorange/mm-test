@@ -34,7 +34,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 @SpringBootApplication
 public class ExampleApplication {
 
-	private final static String BASE_URL = "https://prototype.avaya.com:443/";
+	private final static String BASE_URL = "https://dev-cores205.uplab.com:443/";
 	/**
 	 * this service prefix should correspond meeting type prefix from Equinox Management
 	 */
@@ -47,8 +47,8 @@ public class ExampleApplication {
 		JsonNode resources = getResources(BASE_URL, null);
 
 		//these login and password should be replaced with login and password of common user
-		String login = "serviceAPI";
-		String password = "1234";
+		String login = "3000001";
+		String password = "3000001";
 		// now we need to get link for authentication service
 		JsonNode jsonNode = resources.get("resources").get("authentication").get("POST").get("login").get("href");
 		//we need to get authentication token from server
@@ -64,10 +64,10 @@ public class ExampleApplication {
 		JsonNode searchConferenceUrl = authenticatedUserResources.get("resources").get("conference").get("GET")
 				.get("getConferences").get("href");
 
-		String number = MEETING_SERVICE_ID_PREFIX + "022";
-		scheduleConference(token, "Description of conference", "Subject of conference", MEETING_SERVICE_ID_PREFIX, number, Base64.encode("1234".getBytes()),
-						   Base64.encode("6797".getBytes()),createConferenceUrl.asText());
-		findConference(token,searchConferenceUrl.asText());
+		String number = MEETING_SERVICE_ID_PREFIX + "024";
+		scheduleConference(token, "Description of conference", "Brand new confence2", MEETING_SERVICE_ID_PREFIX, number, "1234",
+						   "6797",createConferenceUrl.asText(),"3000001@uplab.com");
+		findConference(token,searchConferenceUrl.asText(), number);
 
 	}
 
@@ -81,7 +81,7 @@ public class ExampleApplication {
 		return request.get(JsonNode.class);
 	}
 
-	private static void findConference(String token, String searchConferenceUrl) throws KeyManagementException,
+	private static void findConference(String token, String searchConferenceUrl, String number) throws KeyManagementException,
 			NoSuchAlgorithmException {
 
 		// try to find conference by it's number.  You could get description of all possible parameters in
@@ -89,7 +89,7 @@ public class ExampleApplication {
 		GetConferenceResponseV2 response = getClient()
 				.target(searchConferenceUrl)
 				.queryParam("detailed","true")
-				.queryParam("number","71022")
+				.queryParam("number",number)
 				.request("application/vnd.avaya.portal.meeting.search.v2+json")
 				.header("Authorization", "UPToken " + token)
 				.get(GetConferenceResponseV2.class);
@@ -105,7 +105,7 @@ public class ExampleApplication {
 	}
 
 	private static void scheduleConference(String token, String description, String subject, String servicePrefix,
-			String number, String accessPin, String moderatorPin, String createConfrenceUrl)
+			String number, String accessPin, String moderatorPin, String createConfrenceUrl, String ownerEmail)
 			throws KeyManagementException, NoSuchAlgorithmException, DatatypeConfigurationException {
 		ScheduleConferenceRequestV2 r = new ScheduleConferenceRequestV2();
 		ConferenceV2 conference = new ConferenceV2();
@@ -126,14 +126,12 @@ public class ExampleApplication {
 		conference.setStartTime(DateTimeFormatter.ISO_DATE_TIME.format(start));
 		// note, that you set duration of the meeting, but not end time explicitly
 		conference.setDuration(DatatypeFactory.newInstance().newDuration(true, 0, 0, 0, 1, 0, 0));
-		// we want witing room to be enabled, so non-moderators will hear "wait until organizar joins  the meeting
+		// we want witing room to be enabled, so non-moderators will hear "wait until organizer joins  the meeting"
 		conference.setWaitingRoom(true);
 
-		// we could add some attendees. This is optional.
+		// we could add some attendees. One attendee is mandatory.
 		AttendeeV2 e = new AttendeeV2();
-		e.setFirstName("Andrey");
-		e.setLastName("Tarasov");
-		e.setEmail("atarasov@something.domain");
+		e.setEmail(ownerEmail);
 		conference.getAttendees().add(e);
 
 		r.getConference().add(conference);
@@ -150,7 +148,7 @@ public class ExampleApplication {
 		// note, that display name should be replaced with actual name of job seeker and agent. Agent should be
 		// moderator
 		System.out.println("Link for agent: " + post.getSwcLaunchURLforModerator());
-		System.out.println("Link for jobseeker: " + post.getSwcLaunchURLforParticipant());
+		System.out.println("Link for jobseeker: " + post.getParticipantLaunchURL());
 		
 		// uncomment to delete. You need to preserve conference id if you want to delete conference later
 /*		getClient().target(BASE_URL + "ups/resources/conference/" + post.getConferenceId())

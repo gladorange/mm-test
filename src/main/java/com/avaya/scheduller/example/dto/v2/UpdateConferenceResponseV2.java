@@ -33,7 +33,6 @@ public class UpdateConferenceResponseV2 {
      */
     protected String conferenceId;
     protected String panelistNumber;
-    protected String status;
     /**
      * Conference number
      */
@@ -55,15 +54,12 @@ public class UpdateConferenceResponseV2 {
      * be
      * replaced (&displayName=[ToBeReplaced])
      */
-    @JsonProperty("swcLaunchURLforParticipant")
-    protected String swcLaunchURLforParticipant;
+    @JsonProperty("participantLaunchURL")
+    protected String participantLaunchURL;
 
     public UpdateConferenceResponseV2() {
         // constructor for Jackson
-
     }
-
-
 
     public List<RecurringItemUpsReport> getRecurringItemReports() {
         return recurringItemReports;
@@ -137,12 +133,12 @@ public class UpdateConferenceResponseV2 {
         this.swcLaunchURLforModerator = swcLaunchURLforModerator;
     }
 
-    public String getSwcLaunchURLforParticipant() {
-        return swcLaunchURLforParticipant;
+    public String getParticipantLaunchURL() {
+        return participantLaunchURL;
     }
 
-    public void setSwcLaunchURLforParticipant(String swcLaunchURLforParticipant) {
-        this.swcLaunchURLforParticipant = swcLaunchURLforParticipant;
+    public void setParticipantLaunchURL(String participantLaunchURL) {
+        this.participantLaunchURL = participantLaunchURL;
     }
 
     @Override

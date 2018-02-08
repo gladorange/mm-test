@@ -15,26 +15,10 @@ import com.avaya.scheduller.example.dto.Weekly;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonAutoDetect(fieldVisibility= Visibility.ANY, getterVisibility= Visibility.NONE, isGetterVisibility= Visibility.NONE, setterVisibility= Visibility.NONE)
+@JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE, setterVisibility= Visibility.NONE)
 public class ConferenceV2 {
     protected String memberId;
     protected String userId;
@@ -166,18 +150,17 @@ public class ConferenceV2 {
 
     /**
      * Direct URL which should be used by moderator to join this meeting. Note, that participant name should be
-     * replaced (&displayName=[ToBeReplaced])
+     * replaced (&displayName=[ToBeReplaced]). Also note, that this field is present only for search requests with
+     * detailed=true
      */
-    @JsonProperty("swcLaunchURLforModerator")
     protected String swcLaunchURLforModerator;
 
     /**
      * Direct URL which should be used by regular participant to join this meeting. Note, that participant name should
-     * be
-     * replaced (&displayName=[ToBeReplaced])
+     * be replaced (&displayName=[ToBeReplaced]). Also note, that this field is present only for search requests with
+     * detailed=true
      */
-    @JsonProperty("swcLaunchURLforParticipant")
-    protected String swcLaunchURLforParticipant;
+    protected String participantLaunchURL;
 
     protected String recurrenceId;
     /**
@@ -192,6 +175,19 @@ public class ConferenceV2 {
     protected LayoutInfo mainVideoLayout;
     protected LayoutInfo customerVideoLayout;
 
+    /**
+     * Login id of the owner of the conference.
+     */
+    protected String loginId;
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
     public String getSwcLaunchURLforModerator() {
         return swcLaunchURLforModerator;
     }
@@ -200,13 +196,14 @@ public class ConferenceV2 {
         this.swcLaunchURLforModerator = swcLaunchURLforModerator;
     }
 
-    public String getSwcLaunchURLforParticipant() {
-        return swcLaunchURLforParticipant;
+    public String getParticipantLaunchURL() {
+        return participantLaunchURL;
     }
 
-    public void setSwcLaunchURLforParticipant(String swcLaunchURLforParticipant) {
-        this.swcLaunchURLforParticipant = swcLaunchURLforParticipant;
+    public void setParticipantLaunchURL(String participantLaunchURL) {
+        this.participantLaunchURL = participantLaunchURL;
     }
+
 
 
     public ConferenceV2() {
@@ -228,6 +225,8 @@ public class ConferenceV2 {
     public void setPlannedEndTime(String plannedEndTime) {
         this.plannedEndTime = plannedEndTime;
     }
+
+
 
     public LayoutInfo getMainVideoLayout() {
         return mainVideoLayout;
