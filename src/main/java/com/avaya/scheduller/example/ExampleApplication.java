@@ -29,6 +29,7 @@ import com.avaya.scheduller.example.dto.v2.GetConferenceResponseV2;
 import com.avaya.scheduller.example.dto.v2.ScheduleConferenceRequestV2;
 import com.avaya.scheduller.example.dto.v2.UpdateConferenceResponseV2;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 @SpringBootApplication
 public class ExampleApplication {
@@ -64,8 +65,8 @@ public class ExampleApplication {
 				.get("getConferences").get("href");
 
 		String number = MEETING_SERVICE_ID_PREFIX + "022";
-		scheduleConference(token, "Description of conference", "Subject of conference", MEETING_SERVICE_ID_PREFIX, number, "1234",
-				"6797",createConferenceUrl.asText());
+		scheduleConference(token, "Description of conference", "Subject of conference", MEETING_SERVICE_ID_PREFIX, number, Base64.encode("1234".getBytes()),
+						   Base64.encode("6797".getBytes()),createConferenceUrl.asText());
 		findConference(token,searchConferenceUrl.asText());
 
 	}
