@@ -119,6 +119,9 @@ public class ExampleApplication {
 		// service prefix is orefix from meeting type in Equinox Management
         conference.setServicePrefix(servicePrefix);
 
+        // this sets owner of the conference. Note, that user with such loginId must be created in iView
+		conference.setLoginId("Andrey");
+
 		conference.setDescription(description);
 		conference.setSubject(subject);
 
