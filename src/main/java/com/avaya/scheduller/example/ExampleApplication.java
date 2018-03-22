@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.net.ssl.HostnameVerifier;
@@ -34,7 +36,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 @SpringBootApplication
 public class ExampleApplication {
 
-	private final static String BASE_URL = "https://prototype.avaya.com:443/";
+	private final static String BASE_URL = "https://dev-cores200.uplab.com:443/";
 	/**
 	 * this service prefix should correspond meeting type prefix from Equinox Management
 	 */
@@ -47,8 +49,8 @@ public class ExampleApplication {
 		JsonNode resources = getResources(BASE_URL, null);
 
 		//these login and password should be replaced with login and password of common user
-		String login = "serviceAPI";
-		String password = "1234";
+		String login = "2000002";
+		String password = "2000002";
 		// now we need to get link for authentication service
 		JsonNode jsonNode = resources.get("resources").get("authentication").get("POST").get("login").get("href");
 		//we need to get authentication token from server
@@ -64,10 +66,10 @@ public class ExampleApplication {
 		JsonNode searchConferenceUrl = authenticatedUserResources.get("resources").get("conference").get("GET")
 				.get("getConferences").get("href");
 
-		String number = MEETING_SERVICE_ID_PREFIX + "024";
+		String number = MEETING_SERVICE_ID_PREFIX + "027";
 		// Note, that ownerEmail should be email of user registered in Management App (iView).
-		scheduleConference(token, "Description of conference", "Brand new confence2", MEETING_SERVICE_ID_PREFIX, number, "1234",
-						   "6797",createConferenceUrl.asText(),"3000001@uplab.com");
+		scheduleConference(token, "From API", "Scheduled from API ", MEETING_SERVICE_ID_PREFIX, number, "1234",
+						   "6797",createConferenceUrl.asText(),"2000001@uplab.com");
 		findConference(token,searchConferenceUrl.asText(), number);
 
 	}
@@ -126,10 +128,10 @@ public class ExampleApplication {
 		conference.setSubject(subject);
 
 		// set start time of conference - in two minutes from now
-		LocalDateTime start = LocalDateTime.now().plusMinutes(2);
-		conference.setStartTime(DateTimeFormatter.ISO_DATE_TIME.format(start));
+		ZonedDateTime start = ZonedDateTime.now(ZoneId.of("Europe/Paris")).plusMinutes(2);
+		conference.setStartTime(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(start));
 		// note, that you set duration of the meeting, but not end time explicitly
-		conference.setDuration(DatatypeFactory.newInstance().newDuration(true, 0, 0, 0, 1, 0, 0));
+		conference.setDuration(DatatypeFactory.newInstance().newDuration(true, 0, 0, 0, 0, 5, 0));
 		// we want witing room to be enabled, so non-moderators will hear "wait until organizer joins  the meeting"
 		conference.setWaitingRoom(true);
 
